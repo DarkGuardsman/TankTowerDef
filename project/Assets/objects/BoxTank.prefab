@@ -530,6 +530,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerCamera: {fileID: 1530613134116170}
+  playerNameText: {fileID: 0}
 --- !u!114 &114294098590772010
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -605,7 +606,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c72f77a142c61db4a90743259e03a877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
+  moveSpeed: 1
+  turnSpeed: 1
 --- !u!124 &124706451020427562
 Behaviour:
   m_ObjectHideFlags: 1

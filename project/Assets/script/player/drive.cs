@@ -7,17 +7,24 @@ using UnityStandardAssets.CrossPlatformInput;
 public class drive : MonoBehaviour {
     
     // Settings
-    public float speed = 1F;
+    public float moveSpeed = 1F;
+    public float turnSpeed = 1F;
+    
+    private float tranlation;
+    
+    private float rotation;
 	
 	// Update is called once per frame
 	void Update () {
         
         //Forward/Backwards movement
-		float tranlation = CrossPlatformInputManager.GetAxis("Vertical") * speed;        
-        transform.Translate(0, 0, tranlation);
-        
-        float rotation = CrossPlatformInputManager.GetAxis("Horizontal") * speed;
-        transform.Rotate(0, rotation, 0);
-        
+		tranlation = CrossPlatformInputManager.GetAxis("Vertical") * moveSpeed;         
+        rotation = CrossPlatformInputManager.GetAxis("Horizontal") * turnSpeed; 
 	}
+    
+    void FixedUpdate ()
+    {
+        transform.Translate(0, 0, tranlation);
+        transform.Rotate(0, rotation, 0);
+    }
 }

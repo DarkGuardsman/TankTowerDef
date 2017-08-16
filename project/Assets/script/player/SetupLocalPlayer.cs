@@ -8,7 +8,9 @@ public class SetupLocalPlayer : NetworkBehaviour
     [SyncVar]
     string playerName = "player";
     
-    public GameObject playerCamera;    
+    public GameObject playerCamera;  
+
+    public TextMesh playerNameText;   
     
     void OnGUI()
     {
@@ -41,6 +43,9 @@ public class SetupLocalPlayer : NetworkBehaviour
     
     void Update()
     {
-        this.GetComponentInChildren<TextMesh>().text = playerName;
+        if(playerNameText != null)
+        {
+            playerNameText.text = playerName;
+        }
     }
 }
