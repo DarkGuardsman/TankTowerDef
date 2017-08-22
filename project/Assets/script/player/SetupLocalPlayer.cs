@@ -8,9 +8,15 @@ public class SetupLocalPlayer : NetworkBehaviour
     [SyncVar]
     string playerName = "player";
     
-    public GameObject playerCamera;  
+    GameObject playerCamera;  
 
-    public TextMesh playerNameText;   
+    TextMesh playerNameText;   
+    
+    void OnEnable()
+    {
+        playerCamera = transform.Find("turret/MainCamera").gameObject;
+        playerNameText = transform.Find("turret/PlayerName").gameObject.GetComponent<TextMesh>();
+    }
     
     void OnGUI()
     {
