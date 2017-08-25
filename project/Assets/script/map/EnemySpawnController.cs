@@ -11,6 +11,8 @@ public class EnemySpawnController : MonoBehaviour {
     public EnemyWave[] waves;
     public int[] delayBetweenWaves;
 
+    public Transform moveGoal;
+
     public double time = 0;
 
     public int currentWave = 0;
