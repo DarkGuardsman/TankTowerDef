@@ -14,8 +14,22 @@ public class SetupLocalPlayer : NetworkBehaviour
     
     void OnEnable()
     {
-        playerCamera = transform.Find("turret/MainCamera").gameObject;
-        playerNameText = transform.Find("turret/PlayerName").gameObject.GetComponent<TextMesh>();
+        playerCamera = GetGameObject("turret/MainCamera");
+        GameObject obj = GetGameObject("turret/PlayerName");
+        if (obj)
+        {
+            playerNameText = obj.GetComponent<TextMesh>();
+        }
+    }
+
+    GameObject GetGameObject(string name)
+    {
+        Transform transform = this.transform.Find(name);
+        if(transform)
+        {
+            return transform.gameObject;
+        }
+        return null;
     }
     
     void OnGUI()

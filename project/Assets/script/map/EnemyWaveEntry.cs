@@ -13,6 +13,8 @@ public class EnemyWaveEntry : System.Object
     /** Total amount to spawn */
     public int numberToSpawn;
 
+    public int numberSpawnedSoFar = 0;
+
     /** Amount to spawn in a single run */
     public int spawnGroup = 1;
 }
