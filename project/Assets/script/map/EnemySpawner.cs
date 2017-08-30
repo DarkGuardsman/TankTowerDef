@@ -3,36 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class EnemySpawner : MonoBehaviour 
+public class EnemySpawner : NodeMap
 {
-    public Transform moveGoal;
-
-    public Vector3 direction;
+    public NodeMap entityMoveTarget;
 
     public EnemyWave[] waves;
 
     public int currentWave;
     public bool doneWithWave;
-
-    public Vector3 spawnPoint;
+    
     public Quaternion spawnRotation = Quaternion.identity;
 
-    void OnEnable()
+    protected override void OnDrawGizmos()
     {
-        direction = transform.TransformDirection(Vector3.down);
-
-        RaycastHit hit;
-
-        if (Physics.Raycast(transform.position, direction,  out hit, 100))
-        {
-            float distance = hit.distance;
-            spawnPoint = new Vector3(transform.position.x, transform.position.y - distance + 1, transform.position.z);
-        }
+        base.OnDrawGizmos();
+        //TODO draw spawn direction
     }
 
-    void OnDrawGizmos()
+    protected override int getRayOffsetY()
     {
-        Gizmos.DrawRay(transform.position, new Vector3(0, -100, 0));
+        return 1;
     }
 
     public void DoSpawning()
@@ -77,7 +67,7 @@ public class EnemySpawner : MonoBehaviour
         EnemyAI enemy = obj.GetComponent<EnemyAI>();
         if(enemy != null)
         {
-            enemy.moveGoal = moveGoal;
+            enemy.moveGoal = entityMoveTarget.getMovePosition();
         }
         else
         {
@@ -90,7 +80,7 @@ public class EnemySpawner : MonoBehaviour
 
     public Vector3 GetSpawnPoint()
     {
-        return spawnPoint;
+        return targetPoint;
     }
 
     public Quaternion GetSpawnRotation()

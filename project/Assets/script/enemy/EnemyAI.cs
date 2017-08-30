@@ -8,7 +8,9 @@ public class EnemyAI : MonoBehaviour {
     public Transform moveGoal;
     public NavMeshAgent agent;
 
-    public float distanceToKeepToTarget = 3;
+    public float distanceToKeepToTarget = 2;
+
+    public float distanceToTarget;
 
     void OnEnable()
     {
@@ -18,13 +20,59 @@ public class EnemyAI : MonoBehaviour {
     // Update is called once per frame
     void FixedUpdate () {
         //TODO find player to attack
-        if (moveGoal != null && agent != null && !agent.hasPath)
+        if (moveGoal != null )
         {
-            float dist = Vector3.Distance(moveGoal.position, transform.position);
-            if (dist > distanceToKeepToTarget)
+            //Calc distance each tick
+            distanceToTarget = Vector3.Distance(moveGoal.position, transform.position);
+
+            //Update navigation path
+            if (agent != null && !agent.hasPath)
             {
-                agent.destination = moveGoal.position;
-            }//TODO add a delay to updating path and dead zone
+                //Path to goal as long as distance is far               
+                if (distanceToTarget > distanceToKeepToTarget)
+                {
+                    agent.destination = moveGoal.position;
+                }
+                //Get next goal
+                else
+                {
+                    //Get next path from current path goal
+                    GameObject gameObject = moveGoal.gameObject;
+                    Debug.Log("EnemyAI: " + gameObject);
+                    if (gameObject)
+                    {
+                        //Try getting path from transform
+                        NodePath path = gameObject.GetComponent<NodePath>();
+                        Debug.Log("EnemyAI: P1 = " + path);
+                        if (path)
+                        {
+                            path = path.nextPoint;
+                            if (path)
+                            {
+                                moveGoal = path.getMovePosition();
+                                agent.destination = moveGoal.position;
+                            }
+                        }
+
+                        //Try getting path from parent
+                        path = gameObject.GetComponentInParent<NodePath>();
+                        Debug.Log("EnemyAI: P2 = " + path);
+                        if (path)
+                        {
+                            path = path.nextPoint;
+                            if (path)
+                            {
+                                moveGoal = path.getMovePosition();
+                                agent.destination = moveGoal.position;
+                            }
+                        }
+                    }
+                }
+            }
         }
+
+        //Get targets to attack
+
+        //Do health updates
     }
 }
