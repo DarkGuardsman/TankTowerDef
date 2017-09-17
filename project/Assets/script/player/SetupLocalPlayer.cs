@@ -56,7 +56,7 @@ public class SetupLocalPlayer : NetworkBehaviour
         //https://www.youtube.com/watch?v=wvUNXkrEMys Add smooth camera following
 		if(isLocalPlayer)
         {
-            GetComponent<drive>().enabled = true;
+            GetComponent<TankMovement>().enabled = true;
             playerCamera.SetActive(true);
         }
 	}

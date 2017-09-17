@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
 //Handles controls for the tank
-public class drive : MonoBehaviour {
+public class TankMovement : MonoBehaviour {
     
     // Settings
     public float moveSpeed = 1F;
