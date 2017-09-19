@@ -22,7 +22,7 @@ public class TurretControl : NetworkBehaviour {
 		transform.Rotate (0, x, 0);
 		transform.Translate (0, 0, z);
 
-		if (CrossPlatformInputManager.GetButton ("Primary")) {
+		if (CrossPlatformInputManager.GetButton ("Fire1")) {
 			CmdFire ();
 		}
 
@@ -31,6 +31,13 @@ public class TurretControl : NetworkBehaviour {
 	[Command]
 	void CmdFire()
 	{
+		var bullet = (GameObject)Instantiate (bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
 
+		bullet.GetComponent<Rigidbody> ().velocity = bullet.transform.forward * 60;
+
+		NetworkServer.Spawn (bullet);
+
+		Destroy (bullet, 2.0f);
 	}
+
 }
