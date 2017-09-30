@@ -4,8 +4,8 @@ using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
 //Handles controls for the tank
-public class TankMovement : MonoBehaviour {
-    
+public class TankMovement : PlayerControl
+{    
     // Settings
     public float moveSpeed = 1F;
     public float turnSpeed = 1F;

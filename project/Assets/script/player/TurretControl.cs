@@ -4,40 +4,30 @@ using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 using UnityEngine.Networking;
 
-public class TurretControl : NetworkBehaviour {
-
+public class TurretControl : PlayerControl
+{
 	public GameObject bulletPrefab;
-	public Transform bulletSpawn;
+	public GameObject bulletSpawn;
+
+    public float yawSpeed = 150.0f;
+    public float pitchSpeed = 3.0f;
+    public float bulletVelocity = 60f;
+    public float bulletDeathTimer = 2f;
 
 	// Update is called once per frame
-	void Update () {
+	void Update () {        
 
-		if (!isLocalPlayer) {
-			return;
-		}
+		float yaw = CrossPlatformInputManager.GetAxis("Rotate Body") * Time.deltaTime * yawSpeed;
+		float pitch = CrossPlatformInputManager.GetAxis("Mouse Y") * Time.deltaTime * pitchSpeed;
 
-		var x = Input.GetAxis("Horizontal") * Time.deltaTime * 150.0f;
-		var z = Input.GetAxis ("Vertical") * Time.deltaTime * 3.0f;
+		transform.Rotate (0, yaw, 0);
+		transform.Rotate(pitch, 0, 0);
 
-		transform.Rotate (0, x, 0);
-		transform.Translate (0, 0, z);
-
-		if (CrossPlatformInputManager.GetButton ("Fire1")) {
-			CmdFire ();
+		if (CrossPlatformInputManager.GetButton ("Fire1"))
+        {
+            Debug.Log("TurretControl: Fired Weapon");
+            player.CmdSpawn(bulletPrefab, bulletSpawn, bulletVelocity, bulletDeathTimer);
 		}
 
 	}
-
-	[Command]
-	void CmdFire()
-	{
-		var bullet = (GameObject)Instantiate (bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
-
-		bullet.GetComponent<Rigidbody> ().velocity = bullet.transform.forward * 60;
-
-		NetworkServer.Spawn (bullet);
-
-		Destroy (bullet, 2.0f);
-	}
-
 }
