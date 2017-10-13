@@ -8,8 +8,12 @@ public class Player : NetworkBehaviour
     
     GameObject playerCamera;  
 
-    TextMesh playerNameText;   
-    
+    TextMesh playerNameText;
+
+    bool pauseGame = false;
+    bool wasGamePaused = false;
+
+    //Use this to setup the object rather than start
     void OnEnable()
     {
         playerCamera = GetGameObject("turret/MainCamera");
@@ -20,26 +24,88 @@ public class Player : NetworkBehaviour
         }
     }
 
-    GameObject GetGameObject(string name)
+    // Use this for initialization
+    void Start()
     {
-        Transform transform = this.transform.Find(name);
-        if(transform)
+        //https://www.youtube.com/watch?v=wvUNXkrEMys Add smooth camera following
+        if (isLocalPlayer)
         {
-            return transform.gameObject;
+            EnablePlayerScripts(gameObject);
+            playerCamera.SetActive(true);
         }
-        return null;
     }
-    
-    void OnGUI()
+
+    //Called each frame update
+    void Update()
     {
-        if(isLocalPlayer)
+        if (playerNameText != null)
         {
-            playerName = GUI.TextField(new Rect (25, Screen.height - 40, 100, 30), playerName);
-            if(GUI.Button(new Rect(130, Screen.height - 40, 80, 30), "Change"))
-            {
-                CmdChangeName(playerName);
-            }
+            playerNameText.text = playerName;
         }
+
+        //Handle screen unlock
+        if (Input.GetKeyDown("escape"))
+        {
+            pauseGame = !pauseGame;
+            TogglePauseState();
+        }
+        if(IsMouseOffScreen())
+        {
+            pauseGame = true;
+            TogglePauseState();
+        }
+    }
+
+    void TogglePauseState()
+    {
+        //Handle screen lock state change
+        if (!wasGamePaused && pauseGame)
+        {
+            wasGamePaused = true;
+            PauseGame();
+        }
+        else if (wasGamePaused && !pauseGame)
+        {
+            wasGamePaused = false;
+            ResumeGame();
+        }
+    }
+
+    bool IsMouseOffScreen()
+    {
+        float mouseX = Input.mousePosition.x;
+        float mouseY = Input.mousePosition.y;
+        float screenX = Screen.width;
+        float screenY = Screen.height;
+
+        return (mouseX == 0 || mouseY == 0 || mouseX >= Screen.width - 1 || mouseY >= Screen.height - 1);
+    }
+
+    void SetCursorState(CursorLockMode wantedMode)
+    {
+        Cursor.lockState = wantedMode;
+        Cursor.visible = (CursorLockMode.Locked != wantedMode);
+    }
+
+    void ResumeGame()
+    {
+        Debug.Log("Player: Resumed game control");
+        SetCursorState(CursorLockMode.Locked);
+        //TODO enable movement
+        //TODO disable esc screen
+    }
+
+    void PauseGame()
+    {
+        Debug.Log("Player: Paused game control");
+        SetCursorState(CursorLockMode.None);
+        //TODO disable movement
+        //TODO enable esc screen
+    }
+
+    void OnDeath()
+    {
+        //TODO switch to free camera
     }
     
     [Command]
@@ -63,17 +129,6 @@ public class Player : NetworkBehaviour
         }
     }
 
-    // Use this for initialization
-    void Start () 
-    {
-        //https://www.youtube.com/watch?v=wvUNXkrEMys Add smooth camera following
-		if(isLocalPlayer)
-        {
-            EnablePlayerScripts(gameObject);
-            playerCamera.SetActive(true);
-        }
-	}
-
     void EnablePlayerScripts(GameObject parent)
     {
         foreach (Component o in parent.GetComponents<Component>())
@@ -95,12 +150,14 @@ public class Player : NetworkBehaviour
             }
         }
     }
-    
-    void Update()
+
+    GameObject GetGameObject(string name)
     {
-        if(playerNameText != null)
+        Transform transform = this.transform.Find(name);
+        if (transform)
         {
-            playerNameText.text = playerName;
+            return transform.gameObject;
         }
+        return null;
     }
 }
