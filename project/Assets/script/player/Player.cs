@@ -10,7 +10,7 @@ public class Player : NetworkBehaviour
 
     TextMesh playerNameText;
 
-    bool pauseGame = false;
+    public bool pauseGame = false;
     bool wasGamePaused = false;
 
     //Use this to setup the object rather than start
@@ -30,7 +30,7 @@ public class Player : NetworkBehaviour
         //https://www.youtube.com/watch?v=wvUNXkrEMys Add smooth camera following
         if (isLocalPlayer)
         {
-            EnablePlayerScripts(gameObject);
+            EnablePlayerScripts(gameObject, true);
             playerCamera.SetActive(true);
         }
     }
@@ -91,7 +91,8 @@ public class Player : NetworkBehaviour
     {
         Debug.Log("Player: Resumed game control");
         SetCursorState(CursorLockMode.Locked);
-        //TODO enable movement
+        EnablePlayerScripts(gameObject, true);
+        //TODO enable in game screen
         //TODO disable esc screen
     }
 
@@ -99,7 +100,8 @@ public class Player : NetworkBehaviour
     {
         Debug.Log("Player: Paused game control");
         SetCursorState(CursorLockMode.None);
-        //TODO disable movement
+        EnablePlayerScripts(gameObject, false);
+        //TODO hide or fade in game screen
         //TODO enable esc screen
     }
 
@@ -129,7 +131,7 @@ public class Player : NetworkBehaviour
         }
     }
 
-    void EnablePlayerScripts(GameObject parent)
+    void EnablePlayerScripts(GameObject parent, bool enable)
     {
         foreach (Component o in parent.GetComponents<Component>())
         {
@@ -137,7 +139,7 @@ public class Player : NetworkBehaviour
             {
                 if (o is PlayerControl)
                 {
-                    ((PlayerControl)o).enabled = true;
+                    ((PlayerControl)o).enabled = enable;
                     ((PlayerControl)o).player = this;
                 }
             }
@@ -146,7 +148,7 @@ public class Player : NetworkBehaviour
         {
             if (t != null && parent.transform != t)
             {
-                EnablePlayerScripts(t.gameObject);
+                EnablePlayerScripts(t.gameObject, enable);
             }
         }
     }

@@ -10,21 +10,26 @@ public class TankMovement : PlayerControl
     public float moveSpeed = 1F;
     public float turnSpeed = 1F;
     
-    private float tranlation;
-    
+    private float tranlation;    
     private float rotation;
 	
 	// Update is called once per frame
 	void Update () {
-        
-        //Forward/Backwards movement
-		tranlation = CrossPlatformInputManager.GetAxis("Vertical") * moveSpeed;         
-        rotation = CrossPlatformInputManager.GetAxis("Horizontal") * turnSpeed; 
+
+        if (!IsControlPaused())
+        {
+            //Forward/Backwards movement
+            tranlation = CrossPlatformInputManager.GetAxis("Vertical") * moveSpeed;
+            rotation = CrossPlatformInputManager.GetAxis("Horizontal") * turnSpeed;
+        }
 	}
     
     void FixedUpdate ()
     {
-        transform.Translate(0, 0, tranlation);
-        transform.Rotate(0, rotation, 0);
+        if (!IsControlPaused())
+        {
+            transform.Translate(0, 0, tranlation);
+            transform.Rotate(0, rotation, 0);
+        }
     }
 }
