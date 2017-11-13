@@ -6,9 +6,9 @@ public class Player : NetworkBehaviour
     [SyncVar]
     string playerName = "player";
     
-    GameObject playerCamera;  
+    public GameObject playerCamera;  
 
-    TextMesh playerNameText;
+    public TextMesh playerNameText;
 
     public bool pauseGame = false;
     bool wasGamePaused = false;
@@ -16,12 +16,7 @@ public class Player : NetworkBehaviour
     //Use this to setup the object rather than start
     void OnEnable()
     {
-        playerCamera = GetGameObject("turret/MainCamera");
-        GameObject obj = GetGameObject("turret/PlayerName");
-        if (obj)
-        {
-            playerNameText = obj.GetComponent<TextMesh>();
-        }
+        
     }
 
     // Use this for initialization
